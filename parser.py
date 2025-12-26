@@ -10,15 +10,11 @@ def clean_input(raw_input: str) -> str:
 
 
 def normalize_signs(expression: str) -> str:
-    
-    # Handle consecutive + and - signs.
-    # Examples:
-    #     +++5    → +5
-    #     --5     → +5
-    #     -++-5   → -5
-    #     ---√16  → -√16
-    #     ++(--5) → +( -5 )
-    
+    """
+    Handle consecutive + and - signs intelligently.
+    - Unary operators: simplify to single - or nothing (if even number of -)
+    - Binary operators: simplify to single + or -
+    """
     normalized = ""
     i = 0
     while i < len(expression):
@@ -30,23 +26,29 @@ def normalize_signs(expression: str) -> str:
             continue
 
         if current in "+-":
+            start_i = i
             sign_count = 0
             while i < len(expression) and expression[i] in "+-":
                 if expression[i] == "-":
                     sign_count += 1
                 i += 1
-           
-            if (normalized == "" or normalized[-1] in "(√" or 
-                (i < len(expression) and expression[i] == "√")):
-                if sign_count % 2 == 1:
+
+            is_unary = (
+                not normalized or        
+                normalized[-1] in "(√" or     
+                (i < len(expression) and expression[i] == "√")    
+            )
+
+            final_sign = "-" if sign_count % 2 == 1 else "+"
+
+            if is_unary:
+
+                if final_sign == "-":
                     normalized += "-"
-                else:
-                    normalized += "+"
+
             else:
-                if sign_count % 2 == 1:
-                    normalized += "-"
-                else:
-                    normalized += "+"
+
+                normalized += final_sign
 
             continue
 
