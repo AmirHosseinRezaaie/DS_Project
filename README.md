@@ -34,6 +34,7 @@ A high-performance, full-featured mathematical expression parser and evaluator b
 Input:      √(4 ^ 2 + 3 ^ 2) * (x + 5) - 10 / 2
 Variables:  x=7
 Result:     108.0
+```
 
 ## Implementations
 
