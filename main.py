@@ -1,4 +1,4 @@
-from parser import clean_input, normalize_signs
+from parser import clean_input, normalize_signs, tokenize
 
 def main():
     print("Advanced Mathematical Expression Evaluator (Python)")
@@ -15,17 +15,22 @@ def main():
             print("Please enter a valid expression.\n")
             continue
 
-        # مرحله ۱: پاک‌سازی اولیه (حذف فاصله‌ها و کاراکترهای سفید)
+        # مرحله ۱: پاک‌سازی
         cleaned = clean_input(expr)
         print(f"Cleaned:     {cleaned}")
 
-        # مرحله ۲: عادی‌سازی علامت‌های متوالی
+        # مرحله ۲: عادی‌سازی علامت‌ها
         normalized = normalize_signs(cleaned)
         print(f"Normalized:  {normalized}")
 
-        # بعداً اینجا ادامه پردازش (توکنایزر، درخت و ...) اضافه می‌شه
-        print("-" * 50)
+        # مرحله ۳: توکنایزر
+        try:
+            tokens = tokenize(normalized)
+            print(f"Tokens:      {tokens}")
+        except ValueError as e:
+            print(f"Tokenization Error: {e}")
+
+        print("-" * 60)
 
 if __name__ == "__main__":
     main()
-    
