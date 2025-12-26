@@ -35,3 +35,9 @@ Input:      √(4 ^ 2 + 3 ^ 2) * (x + 5) - 10 / 2
 Variables:  x=7
 Result:     108.0
 
+## Implementations
+
+### Python (In Progress)
+- Modular design with separate files
+- Full feature support including visualization
+- Current status: Project structure initialized
