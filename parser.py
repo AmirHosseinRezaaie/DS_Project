@@ -1,107 +1,56 @@
-"""
-Module for input processing: cleaning, normalization, and tokenization.
-"""
-
-from dataclasses import dataclass
-from typing import List
-
-@dataclass
-class Token:
-    type: str      # NUMBER, OPERATOR, LPAREN, RPAREN
-    value: any
-
-    def __repr__(self) -> str:
-        return f"Token({self.type}, {repr(self.value)})"
-
-
-def clean_input(raw_input: str) -> str:
-    """Remove all whitespace characters."""
-    return raw_input.replace(" ", "").replace("\t", "").replace("\n", "").replace("\r", "")
+def precedence(op: str) -> int:
+    """
+    Return operator precedence.
+    Higher number = higher precedence
+    ^ is right-associative, others left-associative
+    """
+    if op in ("+", "-"):
+        return 1
+    if op in ("*", "/"):
+        return 2
+    if op == "^":
+        return 3
+    if op == "√":
+        return 4  # بالاترین اولویت - یک‌تایی
+    return 0
 
 
-def normalize_signs(expression: str) -> str:
-    """Handle consecutive + and - signs intelligently."""
-    normalized = ""
-    i = 0
-    while i < len(expression):
-        current = expression[i]
+def to_rpn(tokens: List[Token]) -> List[any]:
+    """
+    Convert infix tokens to Reverse Polish Notation using Shunting-Yard algorithm.
+    Returns list of values (int or str) ready for tree building.
+    """
+    output = []
+    stack = []
 
-        if current in "0123456789()*/^√":
-            normalized += current
-            i += 1
-            continue
+    
+    for token in tokens:
+        if token.type == "NUMBER":
+            output.append(token.value)
 
-        if current in "+-":
-            sign_count = 0
-            while i < len(expression) and expression[i] in "+-":
-                if expression[i] == "-":
-                    sign_count += 1
-                i += 1
+        elif token.type == "OPERATOR":
+            op = token.value
+            while (stack and 
+                   stack[-1] != "(" and 
+                   precedence(stack[-1]) > precedence(op) or
+                   (precedence(stack[-1]) == precedence(op) and op != "^")):  # left-associative
+                output.append(stack.pop())
+            stack.append(op)
 
-            is_unary = (
-                not normalized or
-                normalized[-1] in "(√" or
-                (i < len(expression) and expression[i] == "√")
-            )
+        elif token.type == "LPAREN":
+            stack.append("(")
 
-            final_sign = "-" if sign_count % 2 == 1 else "+"
-
-            if is_unary:
-                if final_sign == "-":
-                    normalized += "-"
+        elif token.type == "RPAREN":
+            while stack and stack[-1] != "(":
+                output.append(stack.pop())
+            if stack and stack[-1] == "(":
+                stack.pop() 
             else:
-                normalized += final_sign
+                raise ValueError("Mismatched parentheses")
 
-            continue
+    while stack:
+        if stack[-1] == "(":
+            raise ValueError("Mismatched parentheses")
+        output.append(stack.pop())
 
-        normalized += current
-        i += 1
-
-    return normalized
-
-
-def tokenize(expression: str) -> List[Token]:
-    """
-    Convert normalized expression to list of tokens.
-    Supports: numbers, +, -, *, /, ^, √, (, )
-    """
-    tokens = []
-    i = 0
-    while i < len(expression):
-        ch = expression[i]
-
-        # Numbers
-        if ch.isdigit():
-            num = 0
-            while i < len(expression) and expression[i].isdigit():
-                num = num * 10 + int(expression[i])
-                i += 1
-            tokens.append(Token("NUMBER", num))
-            continue
-
-        # Operators
-        if ch in "+-*/^":
-            tokens.append(Token("OPERATOR", ch))
-            i += 1
-            continue
-
-        # Square root (unary operator)
-        if ch == "√":
-            tokens.append(Token("OPERATOR", "√"))
-            i += 1
-            continue
-
-        # Parentheses
-        if ch == "(":
-            tokens.append(Token("LPAREN", "("))
-            i += 1
-            continue
-
-        if ch == ")":
-            tokens.append(Token("RPAREN", ")"))
-            i += 1
-            continue
-
-        raise ValueError(f"Unknown character: {ch}")
-
-    return tokens
+    return output
