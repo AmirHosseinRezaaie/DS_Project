@@ -1,4 +1,5 @@
 from parser import clean_input, normalize_signs, tokenize, to_rpn
+from tree import build_tree, print_tree
 
 def main():
     print("Advanced Mathematical Expression Evaluator (Python)")
@@ -16,21 +17,22 @@ def main():
             continue
 
         try:
-            # مرحله ۱: پاک‌سازی
             cleaned = clean_input(expr)
             print(f"Cleaned:     {cleaned}")
 
-            # مرحله ۲: عادی‌سازی علامت‌ها
             normalized = normalize_signs(cleaned)
             print(f"Normalized:  {normalized}")
 
-            # مرحله ۳: توکنایزر
             tokens = tokenize(normalized)
             print(f"Tokens:      {tokens}")
 
-            # مرحله ۴: تبدیل به RPN
             rpn = to_rpn(tokens)
             print(f"RPN:         {rpn}")
+
+            # مرحله جدید: ساخت درخت
+            root = build_tree(rpn)
+            print("\nExpression Tree:")
+            print_tree(root)
 
         except ValueError as e:
             print(f"Error: {e}")
