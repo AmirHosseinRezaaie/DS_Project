@@ -1,65 +1,47 @@
-"""
-Module for expression tree: Node class, building, printing, and evaluation.
-"""
+import math
 
-from dataclasses import dataclass
-from typing import Optional, Any
-
-@dataclass
-class Node:
-    value: Any          # int یا str (عملگر)
-    left: Optional['Node'] = None
-    right: Optional['Node'] = None
-
-    def __repr__(self) -> str:
-        return f"Node({repr(self.value)})"
-
-
-def build_tree(rpn: list) -> Node:
+def evaluate_tree(node: Optional[Node]) -> float:
     """
-    Build expression tree from Reverse Polish Notation.
-    Uses a stack-based approach.
+    Recursively evaluate the expression tree.
+    Returns float result.
     """
-    if not rpn:
-        raise ValueError("Empty RPN expression")
+    if node is None:
+        raise ValueError("Cannot evaluate None node")
 
-    stack: list[Node] = []
+    # برگ: عدد
+    if isinstance(node.value, int):
+        return float(node.value)
 
-    for item in rpn:
-        if isinstance(item, int):  # عدد
-            stack.append(Node(item))
+    # عملگرها
+    if node.value == "+":
+        return evaluate_tree(node.left) + evaluate_tree(node.right)
 
-        else:  # عملگر
-            if item == "√":
-                # عملگر یک‌تایی: فقط فرزند چپ
-                if not stack:
-                    raise ValueError("Invalid RPN: missing operand for √")
-                left = stack.pop()
-                node = Node("√", left=left, right=None)
-                stack.append(node)
+    if node.value == "-":
+        if node.right is None:  # عملگر یک‌تایی منفی (مثل -5)
+            return -evaluate_tree(node.left)
+        return evaluate_tree(node.left) - evaluate_tree(node.right)
 
-            else:
-                # عملگر دودویی
-                if len(stack) < 2:
-                    raise ValueError(f"Invalid RPN: not enough operands for {item}")
-                right = stack.pop()
-                left = stack.pop()
-                node = Node(item, left=left, right=right)
-                stack.append(node)
+    if node.value == "*":
+        return evaluate_tree(node.left) * evaluate_tree(node.right)
 
-    if len(stack) != 1:
-        raise ValueError("Invalid RPN: multiple roots remain")
+    if node.value == "/":
+        left_val = evaluate_tree(node.left)
+        right_val = evaluate_tree(node.right)
+        if right_val == 0:
+            raise ZeroDivisionError("Division by zero occurred!")
+        return left_val / right_val
 
-    return stack[0]
+    if node.value == "^":
+        left_val = evaluate_tree(node.left)
+        right_val = evaluate_tree(node.right)
+        return math.pow(left_val, right_val)
 
+    if node.value == "√":
+        if node.left is None:
+            raise ValueError("√ operator missing operand")
+        val = evaluate_tree(node.left)
+        if val < 0:
+            raise ValueError("Cannot take square root of negative number")
+        return math.sqrt(val)
 
-def print_tree(node: Optional[Node], level: int = 0, prefix: str = "Root: ") -> None:
-    """
-    Simple indented tree printing for debugging.
-    """
-    if node is not None:
-        print("  " * level + prefix + str(node.value))
-        if node.left:
-            print_tree(node.left, level + 1, "L── ")
-        if node.right:
-            print_tree(node.right, level + 1, "R── ")
+    raise ValueError(f"Unknown operator: {node.value}")

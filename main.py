@@ -1,5 +1,5 @@
 from parser import clean_input, normalize_signs, tokenize, to_rpn
-from tree import build_tree, print_tree
+from tree import build_tree, print_tree, evaluate_tree
 
 def main():
     print("Advanced Mathematical Expression Evaluator (Python)")
@@ -29,17 +29,22 @@ def main():
             rpn = to_rpn(tokens)
             print(f"RPN:         {rpn}")
 
-            # مرحله جدید: ساخت درخت
             root = build_tree(rpn)
             print("\nExpression Tree:")
             print_tree(root)
 
-        except ValueError as e:
-            print(f"Error: {e}")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
+            # مرحله جدید: محاسبه نتیجه
+            result = evaluate_tree(root)
+            print(f"\nResult:      {result}")
 
-        print("-" * 70)
+        except ZeroDivisionError as e:
+            print(f"\nMath Error: {e}")
+        except ValueError as e:
+            print(f"\nError: {e}")
+        except Exception as e:
+            print(f"\nUnexpected error: {e}")
+
+        print("-" * 80)
 
 if __name__ == "__main__":
     main()
