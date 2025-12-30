@@ -1,89 +1,131 @@
 import math
-from typing import Optional, Dict
-from graphviz import Digraph  # Import for visualization
+from typing import Optional, Dict, List
+from graphviz import Digraph
+
 
 class Node:
-    def __init__(self, value: any, left: Optional['Node'] = None, right: Optional['Node'] = None):
+    def __init__(self, value, left: Optional['Node'] = None, right: Optional['Node'] = None):
         self.value = value
         self.left = left
         self.right = right
 
-def build_tree(rpn: List[any]) -> Optional[Node]:
-    """
-    Build binary expression tree from RPN.
-    """
+
+def build_tree(rpn: List) -> Optional[Node]:
+    """Build binary expression tree from RPN"""
     stack = []
     
     for token in rpn:
-        if isinstance(token, (int, float, str)):
+        # Operand (number or variable)
+        if isinstance(token, (int, float, str)) and token not in "+-*/^√":
             stack.append(Node(token))
+        # Operator
         else:
-            if token == "√" or (token == "-" and len(stack) == 1):
-                left = stack.pop()
-                right = None
+            # Unary operators (√ or unary -)
+            if token == "√":
+                if not stack:
+                    raise ValueError("Invalid expression")
+                operand = stack.pop()
+                stack.append(Node(token, operand, None))
+            # Binary operators
             else:
+                if len(stack) < 2:
+                    raise ValueError("Invalid expression")
                 right = stack.pop()
                 left = stack.pop()
-            stack.append(Node(token, left, right))
+                stack.append(Node(token, left, right))
     
     if len(stack) != 1:
         raise ValueError("Invalid RPN")
     
     return stack[0]
 
-def print_tree(node: Optional[Node], indent: str = ""):
-    """
-    Print tree structure.
-    """
+
+def print_tree(node: Optional[Node], prefix: str = "", is_tail: bool = True):
+    """Print tree structure with proper formatting"""
     if node is None:
         return
-    print(f"{indent}{node.value}")
-    if node.left:
-        print_tree(node.left, indent + "├── ")
-    if node.right:
-        print_tree(node.right, indent + "└── ")
-
-def evaluate_tree(node: Optional[Node], variables: Dict[str, float] = {}) -> float:
-    """
-    Evaluate tree with variables.
-    """
-    if node is None:
-        raise ValueError("None node")
     
+    print(prefix + ("└── " if is_tail else "├── ") + str(node.value))
+    
+    children = []
+    if node.left:
+        children.append(node.left)
+    if node.right:
+        children.append(node.right)
+    
+    for i, child in enumerate(children):
+        is_last = (i == len(children) - 1)
+        extension = "    " if is_tail else "│   "
+        print_tree(child, prefix + extension, is_last)
+
+
+def evaluate_tree(node: Optional[Node], variables: Dict[str, float] = None) -> float:
+    """Evaluate expression tree with variable substitution"""
+    if variables is None:
+        variables = {}
+    
+    if node is None:
+        raise ValueError("None node encountered")
+    
+    # Number
     if isinstance(node.value, (int, float)):
         return float(node.value)
     
-    if isinstance(node.value, str):
-        return variables.get(node.value, raise ValueError(f"Undefined: {node.value}"))
+    # Variable
+    if isinstance(node.value, str) and node.value not in "+-*/^√":
+        if node.value not in variables:
+            raise ValueError(f"Undefined variable: {node.value}")
+        return variables[node.value]
     
+    # Evaluate children
     left_val = evaluate_tree(node.left, variables) if node.left else None
     right_val = evaluate_tree(node.right, variables) if node.right else None
     
-    ops = {
-        "+": lambda: left_val + right_val,
-        "-": lambda: -left_val if right_val is None else left_val - right_val,
-        "*": lambda: left_val * right_val,
-        "/": lambda: left_val / right_val if right_val != 0 else raise ZeroDivisionError("Division by zero"),
-        "^": lambda: math.pow(left_val, right_val),
-        "√": lambda: math.sqrt(left_val) if left_val >= 0 else raise ValueError("Negative sqrt")
-    }
-    return ops.get(node.value, lambda: raise ValueError(f"Unknown op: {node.value}"))()
+    # Apply operator
+    op = node.value
+    if op == '+':
+        return left_val + right_val
+    elif op == '-':
+        return left_val - right_val
+    elif op == '*':
+        return left_val * right_val
+    elif op == '/':
+        if right_val == 0:
+            raise ZeroDivisionError("Division by zero")
+        return left_val / right_val
+    elif op == '^':
+        return math.pow(left_val, right_val)
+    elif op == '√':
+        if left_val < 0:
+            raise ValueError("Square root of negative number")
+        return math.sqrt(left_val)
+    else:
+        raise ValueError(f"Unknown operator: {op}")
 
-def visualize_tree(root: Optional[Node], filename: str = "expression_tree.png"):
-    """
-    Visualize tree using Graphviz and save as PNG.
-    """
+
+def visualize_tree(root: Optional[Node], filename: str = "expression_tree"):
+    """Generate tree visualization using Graphviz"""
     if root is None:
+        print("Empty tree, no visualization generated")
         return
-    dot = Digraph()
-    def add_nodes(node, parent=None):
-        if node:
-            node_id = str(id(node))
-            dot.node(node_id, str(node.value))
-            if parent:
-                dot.edge(parent, node_id)
-            add_nodes(node.left, node_id)
-            add_nodes(node.right, node_id)
+    
+    dot = Digraph(comment='Expression Tree')
+    dot.attr(rankdir='TB')
+    
+    def add_nodes(node, parent_id=None):
+        if node is None:
+            return
+        
+        node_id = str(id(node))
+        label = str(node.value)
+        dot.node(node_id, label)
+        
+        if parent_id:
+            dot.edge(parent_id, node_id)
+        
+        add_nodes(node.left, node_id)
+        add_nodes(node.right, node_id)
+    
     add_nodes(root)
     dot.render(filename, format='png', cleanup=True)
-    print(f"Tree saved as {filename}")
+    print(f"Tree visualization saved as {filename}.png")
