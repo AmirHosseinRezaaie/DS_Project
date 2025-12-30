@@ -1,22 +1,26 @@
 from parser import clean_input, normalize_signs, tokenize, to_rpn
-from tree import build_tree, print_tree, evaluate_tree
+from tree import build_tree, print_tree, evaluate_tree, visualize_tree
+from variables import parse_variables
 
 def main():
     print("Advanced Mathematical Expression Evaluator (Python)")
-    print("Enter expression (or 'quit' to exit):\n")
+    print("Enter expression (or 'quit' to exit). Variables like x=10, y=5 optional:\n")
 
     while True:
-        expr = input("> ").strip()
+        input_str = input("> ").strip()
         
-        if expr.lower() == "quit":
+        if input_str.lower() == "quit":
             print("Goodbye!")
             break
         
-        if not expr:
+        if not input_str:
             print("Please enter a valid expression.\n")
             continue
 
         try:
+            # Parse variables if present
+            expr, variables = parse_variables(input_str)
+            
             cleaned = clean_input(expr)
             print(f"Cleaned:     {cleaned}")
 
@@ -33,8 +37,11 @@ def main():
             print("\nExpression Tree:")
             print_tree(root)
 
-            # مرحله جدید: محاسبه نتیجه
-            result = evaluate_tree(root)
+            # Visualize tree
+            visualize_tree(root, "expression_tree.png")
+
+            # Evaluate with variables
+            result = evaluate_tree(root, variables)
             print(f"\nResult:      {result}")
 
         except ZeroDivisionError as e:
