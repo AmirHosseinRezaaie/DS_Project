@@ -2,43 +2,102 @@
 
 A high-performance, full-featured mathematical expression parser and evaluator built from scratch using core Data Structures & Algorithms concepts.
 
-## Key Features
+## 🎯 Key Features
 
-- Full mathematical expression parsing with correct operator precedence  
-- Supports: `+ − × ÷ ^ √ ( )`  
-- Handles complex unary operations: `−(−(−۲))`, `+++۵`, `−−−√۱۶`  
-- Automatic input normalization (consecutive signs simplified)  
-- Complete Expression Tree construction from Reverse Polish Notation (RPN)  
-- Accurate evaluation via post-order tree traversal  
-- Division by zero detection with clear error message  
-- Square root of negative numbers (with negative input protection)  
-- Graphical visualization of the Expression Tree using Graphviz  
-- Variable support: `x=10, count=5` → usable in expressions  
-- Clean, modular, and well-structured Python implementation  
+- ✅ Full mathematical expression parsing with correct operator precedence
+- ✅ Supports: `+ − × ÷ ^ √ ( )`
+- ✅ Handles complex unary operations: `−(−(−2))`, `+++5`, `−−−√16`
+- ✅ Automatic input normalization (consecutive signs simplified)
+- ✅ Complete Expression Tree construction from Reverse Polish Notation (RPN)
+- ✅ Accurate evaluation via post-order tree traversal
+- ✅ Division by zero detection with clear error messages
+- ✅ Square root of negative numbers protection
+- ✅ **Variable support**: `x=10, y=5` → usable in expressions
+- ✅ **Graphical visualization** of Expression Tree using Graphviz
+- ✅ Clean, modular, and well-structured implementation
 
-## Bonus Features Implemented
-- Tree visualization (Graphviz)
-- Variable substitution
-- Professional documentation
-
-## Files
-- DS_Project.ipynb         → Complete implementation
-- expression_tree.png      → Tree visualization
-- README.md                → This file
-
-**Status: Fully Completed • All Requirements + Multiple Bonuses • Ready for Submission**
-
-## Example Usage
-
-```python
-Input:      √(4 ^ 2 + 3 ^ 2) * (x + 5) - 10 / 2
-Variables:  x=7
-Result:     108.0
+## 📁 Project Structure
+```
+DS_Project/
+├── python/           # Python implementation (Complete ✅)
+├── cpp/             # C++ implementation (Coming soon 🚧)
+└── README.md        # This file
 ```
 
-## Implementations
+## 🐍 Python Implementation
 
-### Python (In Progress)
-- Modular design with separate files
-- Full feature support including visualization
-- Current status: Project structure initialized
+### Requirements
+```bash
+pip install graphviz
+```
+
+### Usage
+```bash
+cd python/src
+python main.py
+```
+
+### Example
+```
+> x=7 : √(4^2 + 3^2) * (x + 5) - 10 / 2
+Cleaned:     √(4^2+3^2)*(x+5)-10/2
+Normalized:  √(4^2+3^2)*(x+5)-10/2
+Tokens:      [Token(NUMBER, 4.0), Token(OPERATOR, ^), ...]
+RPN:         [4.0, 2.0, '^', 3.0, 2.0, '^', '+', '√', ...]
+
+Expression Tree:
+└── -
+    ├── *
+    │   ├── √
+    │   │   └── +
+    │   │       ├── ^
+    │   │       │   ├── 4.0
+    │   │       │   └── 2.0
+    │   │       └── ^
+    │   │           ├── 3.0
+    │   │           └── 2.0
+    │   └── +
+    │       ├── x
+    │       └── 5.0
+    └── /
+        ├── 10.0
+        └── 2.0
+
+Result:      55.0
+```
+
+## 🎓 Educational Value
+
+This project demonstrates:
+- **Stack-based algorithms** (Shunting-yard for RPN conversion)
+- **Tree data structures** (Binary expression trees)
+- **Recursive algorithms** (Tree traversal and evaluation)
+- **String parsing** (Tokenization and normalization)
+- **Error handling** (Division by zero, invalid input)
+
+## 📊 Implementation Status
+
+| Feature | Python | C++ |
+|---------|--------|-----|
+| Tokenizer | ✅ | 🚧 |
+| RPN Conversion | ✅ | 🚧 |
+| Expression Tree | ✅ | 🚧 |
+| Evaluation | ✅ | 🚧 |
+| Variables | ✅ | 🚧 |
+| Visualization | ✅ (Graphviz) | 🚧 (Text-based) |
+| Error Handling | ✅ | 🚧 |
+
+## 🚀 Upcoming
+
+- [ ] C++ implementation with standard library only
+- [ ] Performance benchmarks
+- [ ] Extended operator support
+- [ ] Multi-variable expressions
+
+## 📝 License
+
+MIT License - Feel free to use for educational purposes
+
+## 👨‍💻 Author
+
+[AmirHosseinRezaaie](https://github.com/AmirHosseinRezaaie)
