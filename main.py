@@ -18,7 +18,6 @@ def main():
             continue
 
         try:
-            # Parse variables if present
             expr, variables = parse_variables(input_str)
             
             cleaned = clean_input(expr)
@@ -38,9 +37,8 @@ def main():
             print_tree(root)
 
             # Visualize tree
-            visualize_tree(root, "expression_tree.png")
+            visualize_tree(root)
 
-            # Evaluate with variables
             result = evaluate_tree(root, variables)
             print(f"\nResult:      {result}")
 
