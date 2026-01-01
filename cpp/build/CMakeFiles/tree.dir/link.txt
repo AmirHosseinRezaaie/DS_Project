@@ -1,0 +1,2 @@
+C:\PROGRA~1\MinGW\bin\ar.exe qc libtree.a CMakeFiles/tree.dir/src/tree.cpp.obj
+C:\PROGRA~1\MinGW\bin\ranlib.exe libtree.a

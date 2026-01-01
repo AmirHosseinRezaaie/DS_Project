@@ -4,6 +4,11 @@ project(ExpressionEvaluator)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Compiler warnings
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
 # Include directories
 include_directories(include)
 
@@ -19,6 +24,14 @@ target_link_libraries(test_parser parser)
 add_executable(test_tree src/test_tree.cpp)
 target_link_libraries(test_tree parser tree utils)
 
-# Main executable (Phase 4)
-# add_executable(expression_evaluator src/main.cpp)
-# target_link_libraries(expression_evaluator parser tree utils)
+# Main executable
+add_executable(expression_evaluator src/main.cpp)
+target_link_libraries(expression_evaluator parser tree utils)
+
+# Install target
+install(TARGETS expression_evaluator DESTINATION bin)
+
+# Print build info
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")

@@ -1,6 +1,7 @@
 #include "utils.hpp"
 #include <sstream>
 #include <algorithm>
+#include <variant>
 
 // Trim whitespace
 std::string trim(const std::string& str) {
@@ -58,4 +59,12 @@ std::pair<std::string, std::map<std::string, double>> parseVariables(const std::
     }
     
     return {trim(expression), variables};
+}
+// Convert TokenValue to string
+std::string tokenValueToString(const TokenValue& val) {
+    if (std::holds_alternative<double>(val)) {
+        return std::to_string(std::get<double>(val));
+    } else {
+        return std::get<std::string>(val);
+    }
 }
