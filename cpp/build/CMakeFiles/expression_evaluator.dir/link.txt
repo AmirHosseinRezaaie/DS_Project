@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\expression_evaluator.dir/objects.a
+C:\PROGRA~1\MinGW\bin\ar.exe qc CMakeFiles\expression_evaluator.dir/objects.a @CMakeFiles\expression_evaluator.dir\objects1.rsp
+C:\PROGRA~1\MinGW\bin\C__~1.EXE -Wl,--whole-archive CMakeFiles\expression_evaluator.dir/objects.a -Wl,--no-whole-archive -o expression_evaluator.exe -Wl,--out-implib,libexpression_evaluator.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\expression_evaluator.dir\linkLibs.rsp

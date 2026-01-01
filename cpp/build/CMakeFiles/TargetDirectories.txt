@@ -1,0 +1,12 @@
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/parser.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/tree.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/utils.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/test_parser.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/test_tree.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/expression_evaluator.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/edit_cache.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/rebuild_cache.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/list_install_components.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/install.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/install/local.dir
+D:/Projects/DS/DSproject/DS_Project/cpp/build/CMakeFiles/install/strip.dir

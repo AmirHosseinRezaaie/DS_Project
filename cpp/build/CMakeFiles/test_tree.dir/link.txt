@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\test_tree.dir/objects.a
+C:\PROGRA~1\MinGW\bin\ar.exe qc CMakeFiles\test_tree.dir/objects.a @CMakeFiles\test_tree.dir\objects1.rsp
+C:\PROGRA~1\MinGW\bin\C__~1.EXE -Wl,--whole-archive CMakeFiles\test_tree.dir/objects.a -Wl,--no-whole-archive -o test_tree.exe -Wl,--out-implib,libtest_tree.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\test_tree.dir\linkLibs.rsp
