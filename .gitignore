@@ -31,3 +31,52 @@ Thumbs.db
 .pytest_cache/
 htmlcov/
 .coverage
+
+# Compiled Object files
+*.o
+*.obj
+*.ko
+*.elf
+
+# Executables
+*.exe
+*.out
+*.app
+expression_evaluator
+test_parser
+test_tree
+test_all
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Static libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Build directories
+build/
+bin/
+obj/
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Memory profiling
+*.log
+vgcore.*
+massif.out.*
+callgrind.out.*
